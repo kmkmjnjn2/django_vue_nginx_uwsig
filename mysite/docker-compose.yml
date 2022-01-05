@@ -1,0 +1,49 @@
+
+
+version: "3"
+
+services:
+  web:
+    build: .
+    container_name: web
+    ports:
+      - "8000:8000"
+
+    command: "uwsgi --ini uwsgi.ini"
+#    command: "python manage.py runserver 0.0.0.0:8000"
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+    networks:
+      - "nginx_web"
+
+
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:7000"
+    depends_on:
+      - web
+    volumes:
+      - ./static:/static
+    networks:
+      - "nginx_web"
+
+networks:
+  nginx_web:
+    driver: bridge
+
+
+
+
+
+
+
+
+
+
+
+
